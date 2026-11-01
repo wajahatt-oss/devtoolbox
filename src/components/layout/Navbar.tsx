@@ -1,0 +1,76 @@
+'use client'
+
+import Link from 'next/link'
+import { useState } from 'react'
+import { Menu, X, Zap } from 'lucide-react'
+import { ThemeToggle } from '@/components/layout/ThemeToggle'
+
+export function Navbar() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-950/90 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 font-bold text-xl">
+            <Zap className="h-6 w-6 text-indigo-500" />
+            <span className="text-gray-900 dark:text-white">DevToolBox</span>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="/tools" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+              All Tools
+            </Link>
+            <Link href="/json-formatter" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+              JSON
+            </Link>
+            <Link href="/jwt-decoder" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+              JWT
+            </Link>
+            <Link href="/uuid-generator" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+              UUID
+            </Link>
+            <ThemeToggle />
+          </nav>
+
+          {/* Mobile */}
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <button
+              onClick={() => setOpen(!open)}
+              className="p-2 rounded-md text-gray-600 dark:text-gray-300"
+              aria-label="Toggle menu"
+            >
+              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        {open && (
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-800 py-4 space-y-2">
+            {[
+              { href: '/tools', label: 'All Tools' },
+              { href: '/json-formatter', label: 'JSON Formatter' },
+              { href: '/jwt-decoder', label: 'JWT Decoder' },
+              { href: '/uuid-generator', label: 'UUID Generator' },
+              { href: '/base64-encoder-decoder', label: 'Base64' },
+              { href: '/sql-formatter', label: 'SQL Formatter' },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="block px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </header>
+  )
+}
