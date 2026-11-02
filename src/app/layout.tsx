@@ -4,6 +4,7 @@ import { ThemeProvider } from 'next-themes'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { AdSenseScript } from '@/components/ads/AdSenseScript'
+import { Analytics } from '@vercel/analytics/next'
 import { defaultMetadata } from '@/lib/seo'
 import './globals.css'
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </div>
           <Footer />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
