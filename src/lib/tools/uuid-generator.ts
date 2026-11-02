@@ -23,3 +23,27 @@ export function generateMultipleUUIDs(count: number): string[] {
   const max = Math.min(Math.max(1, count), 100)
   return Array.from({ length: max }, () => generateUUIDv4())
 }
+
+const EMPTY_UUIDS: string[] = []
+let initialUUIDs: string[] | null = null
+const initialUUIDListeners = new Set<() => void>()
+
+export function subscribeToInitialUUIDs(listener: () => void): () => void {
+  initialUUIDListeners.add(listener)
+  if (initialUUIDs === null) {
+    initialUUIDs = generateMultipleUUIDs(5)
+    initialUUIDListeners.forEach((notify) => notify())
+  }
+  return () => {
+    initialUUIDListeners.delete(listener)
+    if (initialUUIDListeners.size === 0) initialUUIDs = null
+  }
+}
+
+export function getInitialUUIDSnapshot(): string[] {
+  return initialUUIDs ?? EMPTY_UUIDS
+}
+
+export function getServerUUIDSnapshot(): string[] {
+  return EMPTY_UUIDS
+}

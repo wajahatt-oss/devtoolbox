@@ -1,17 +1,16 @@
 'use client'
 
 import Link from 'next/link'
+import { useSyncExternalStore } from 'react'
 import { Zap } from 'lucide-react'
+import { tools } from '@/lib/tools'
 
-const tools = [
-  { href: '/json-formatter', label: 'JSON Formatter' },
-  { href: '/jwt-decoder', label: 'JWT Decoder' },
-  { href: '/uuid-generator', label: 'UUID Generator' },
-  { href: '/base64-encoder-decoder', label: 'Base64 Encoder/Decoder' },
-  { href: '/sql-formatter', label: 'SQL Formatter' },
-]
+const subscribeToYear = () => () => {}
+const getCurrentYear = () => new Date().getFullYear()
+const getServerYear = () => null
 
 export function Footer() {
+  const year = useSyncExternalStore(subscribeToYear, getCurrentYear, getServerYear)
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
@@ -28,10 +27,10 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Tools</h3>
             <ul className="space-y-2">
-              {tools.map((tool) => (
-                <li key={tool.href}>
-                  <Link href={tool.href} className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                    {tool.label}
+              {tools.slice(0, 7).map((tool) => (
+                <li key={tool.slug}>
+                  <Link href={`/${tool.slug}`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                    {tool.name}
                   </Link>
                 </li>
               ))}
@@ -45,11 +44,21 @@ export function Footer() {
                   All Tools
                 </Link>
               </li>
+              <li>
+                <Link href="/privacy" className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-400">
-          <p>© 2025 DevToolBox. All tools run in your browser. No data is sent to any server.</p>
+          <p>© {year ?? ''} DevToolBox. Your tool inputs are processed in your browser.</p>
         </div>
       </div>
     </footer>

@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Search, Zap, Shield, Globe, ArrowRight } from 'lucide-react'
+import { Search, Zap, Shield, Globe, ArrowRight, Sparkles } from 'lucide-react'
 import { tools, searchTools } from '@/lib/tools'
 import { ToolCard } from '@/components/tools/ToolCard'
+import { AdSenseUnit } from '@/components/ads/AdSenseUnit'
 
 export default function HomePage() {
   const [query, setQuery] = useState('')
@@ -13,48 +14,57 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-indigo-950 border-b border-gray-200 dark:border-gray-800">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-sm font-medium mb-6">
-            <Zap className="h-4 w-4" />
-            100% free · runs in your browser · no signup required
+      <main id="main-content">
+      <section className="relative overflow-hidden border-b border-gray-200 bg-gradient-to-br from-indigo-50 via-white to-violet-50 dark:border-gray-800 dark:from-gray-950 dark:via-gray-950 dark:to-indigo-950">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="mx-auto max-w-4xl text-center">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-indigo-700 shadow-sm dark:border-indigo-900 dark:bg-gray-900/80 dark:text-indigo-300">
+            <Sparkles aria-hidden="true" className="h-4 w-4" />
+            Free developer tools · Private by design
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white tracking-tight mb-4">
-            Everything Developers Need,<br className="hidden sm:block" /> In One Place.
+          <h1 className="mb-5 text-4xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-5xl lg:text-6xl">
+            The everyday tools developers need, <span className="text-indigo-600 dark:text-indigo-400">all in one place.</span>
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
-            Fast, free, and easy-to-use online tools for developers. Format JSON, decode JWTs, generate UUIDs, and more — all processed locally in your browser.
+          <p className="mx-auto mb-8 max-w-2xl text-lg leading-8 text-gray-600 dark:text-gray-300">
+            Format data, compare text, and convert common developer formats with quick, focused utilities. Your input stays in your browser.
           </p>
 
-          {/* Search */}
-          <div className="relative max-w-lg mx-auto">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <div className="relative mx-auto max-w-xl">
+            <label htmlFor="home-tool-search" className="sr-only">Search developer tools</label>
+            <Search aria-hidden="true" className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
             <input
+              id="home-tool-search"
               type="search"
               placeholder="Search tools..."
+              aria-describedby="home-search-hint"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+              className="w-full rounded-2xl border border-gray-300 bg-white py-4 pl-12 pr-4 text-gray-900 shadow-lg shadow-indigo-950/5 placeholder:text-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
             />
+            <span id="home-search-hint" className="sr-only">Results update as you type.</span>
+          </div>
+          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">No account. No installation. No upload of your tool input.</p>
           </div>
         </div>
       </section>
 
+      <AdSenseUnit slot={process.env.NEXT_PUBLIC_ADSENSE_HOME_SLOT} placement="homepage-below-hero" />
+
       {/* Tools grid */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      <section aria-labelledby="all-tools-heading" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h2 id="all-tools-heading" className="text-2xl font-bold text-gray-900 dark:text-white">
             {query.trim() ? `Results for "${query}"` : 'All Tools'}
           </h2>
           {!query && (
             <Link href="/tools" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
-              View all <ArrowRight className="h-4 w-4" />
+              View all               <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </Link>
           )}
         </div>
 
         {filtered.length === 0 ? (
-          <p className="text-gray-500 dark:text-gray-400 text-center py-12">No tools found for &ldquo;{query}&rdquo;.</p>
+          <p role="status" className="py-12 text-center text-gray-500 dark:text-gray-400">No tools found for &ldquo;{query}&rdquo;.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((tool) => (
@@ -65,23 +75,23 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="bg-gray-50 dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-          <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-12">Why DevToolBox?</h2>
+      <section className="border-y border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+          <h2 className="mb-10 text-center text-2xl font-bold text-gray-900 dark:text-white">Why DevToolBox?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                icon: <Zap className="h-6 w-6 text-indigo-500" />,
+                icon: <Zap aria-hidden="true" className="h-6 w-6 text-indigo-500" />,
                 title: 'Instant Results',
                 desc: 'All tools run entirely in your browser. No server round-trips, no waiting.',
               },
               {
-                icon: <Shield className="h-6 w-6 text-indigo-500" />,
+                icon: <Shield aria-hidden="true" className="h-6 w-6 text-indigo-500" />,
                 title: 'Private & Secure',
                 desc: 'Your data never leaves your device. We never log, store, or transmit your input.',
               },
               {
-                icon: <Globe className="h-6 w-6 text-indigo-500" />,
+                icon: <Globe aria-hidden="true" className="h-6 w-6 text-indigo-500" />,
                 title: 'Always Free',
                 desc: 'Core tools are free forever. No account required to get started.',
               },
@@ -95,6 +105,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </main>
     </>
   )
 }

@@ -10,7 +10,12 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-950/90 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') setOpen(false)
+        }}
+      >
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-xl">
@@ -19,7 +24,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav aria-label="Primary navigation" className="hidden md:flex items-center gap-6">
             <Link href="/tools" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
               All Tools
             </Link>
@@ -41,7 +46,9 @@ export function Navbar() {
             <button
               onClick={() => setOpen(!open)}
               className="p-2 rounded-md text-gray-600 dark:text-gray-300"
-              aria-label="Toggle menu"
+              aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -49,8 +56,7 @@ export function Navbar() {
         </div>
 
         {/* Mobile menu */}
-        {open && (
-          <div className="md:hidden border-t border-gray-200 dark:border-gray-800 py-4 space-y-2">
+        <nav id="mobile-navigation" aria-label="Mobile navigation" hidden={!open} className="md:hidden border-t border-gray-200 dark:border-gray-800 py-4 space-y-2">
             {[
               { href: '/tools', label: 'All Tools' },
               { href: '/json-formatter', label: 'JSON Formatter' },
@@ -68,8 +74,7 @@ export function Navbar() {
                 {item.label}
               </Link>
             ))}
-          </div>
-        )}
+        </nav>
       </div>
     </header>
   )
