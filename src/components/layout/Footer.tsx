@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useSyncExternalStore } from 'react'
 import { Zap } from 'lucide-react'
-import { tools } from '@/lib/tools'
+import { getToolHref, tools } from '@/lib/tools'
 
 const subscribeToYear = () => () => {}
 const getCurrentYear = () => new Date().getFullYear()
@@ -27,9 +27,9 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Tools</h3>
             <ul className="space-y-2">
-              {tools.slice(0, 7).map((tool) => (
+              {[...tools.slice(0, 5), ...tools.filter((tool) => tool.href)].map((tool) => (
                 <li key={tool.slug}>
-                  <Link href={`/${tool.slug}`} className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                  <Link href={getToolHref(tool)} className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                     {tool.name}
                   </Link>
                 </li>

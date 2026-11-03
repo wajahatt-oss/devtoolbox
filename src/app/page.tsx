@@ -3,18 +3,27 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Search, Zap, Shield, Globe, ArrowRight, Sparkles } from 'lucide-react'
-import { tools, searchTools } from '@/lib/tools'
+import { tools, categories, searchTools, getToolsByCategory } from '@/lib/tools'
 import { ToolCard } from '@/components/tools/ToolCard'
 import { AdSenseUnit } from '@/components/ads/AdSenseUnit'
+import { cn } from '@/lib/utils'
 
 export default function HomePage() {
   const [query, setQuery] = useState('')
-  const filtered = query.trim() ? searchTools(query) : tools
+  const [activeCategory, setActiveCategory] = useState('Popular')
+  const filtered = query.trim()
+    ? searchTools(query)
+    : activeCategory === 'Popular'
+      ? tools.filter((tool) => tool.popular)
+      : activeCategory === 'Recently added'
+        ? tools.filter((tool) => tool.recent)
+      : activeCategory === 'All'
+        ? tools
+        : getToolsByCategory(activeCategory)
 
   return (
-    <>
+    <main id="main-content">
       {/* Hero */}
-      <main id="main-content">
       <section className="relative overflow-hidden border-b border-gray-200 bg-gradient-to-br from-indigo-50 via-white to-violet-50 dark:border-gray-800 dark:from-gray-950 dark:via-gray-950 dark:to-indigo-950">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="mx-auto max-w-4xl text-center">
@@ -54,14 +63,43 @@ export default function HomePage() {
       <section aria-labelledby="all-tools-heading" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
         <div className="flex items-center justify-between mb-8">
           <h2 id="all-tools-heading" className="text-2xl font-bold text-gray-900 dark:text-white">
-            {query.trim() ? `Results for "${query}"` : 'All Tools'}
+            {query.trim()
+              ? `Results for "${query}"`
+              : activeCategory === 'Popular'
+                ? 'Popular tools'
+                : activeCategory === 'Recently added'
+                  ? 'Recently added tools'
+                : activeCategory === 'All'
+                  ? 'All tools'
+                  : activeCategory}
           </h2>
-          {!query && (
-            <Link href="/tools" className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
-              View all               <ArrowRight aria-hidden="true" className="h-4 w-4" />
+          {!query.trim() && (
+            <Link href="/tools" className="flex items-center gap-1 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400">
+              Browse all tools <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </Link>
           )}
         </div>
+
+        {!query.trim() && (
+          <div className="mb-8 flex flex-wrap gap-2" aria-label="Filter tools by category">
+            {['Popular', 'Recently added', 'All', ...categories].map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setActiveCategory(category)}
+                aria-pressed={activeCategory === category}
+                className={cn(
+                  'rounded-full px-3 py-1.5 text-sm font-medium transition-colors',
+                  activeCategory === category
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                )}
+              >
+                {category === 'All' ? 'All tools' : category}
+              </button>
+            ))}
+          </div>
+        )}
 
         {filtered.length === 0 ? (
           <p role="status" className="py-12 text-center text-gray-500 dark:text-gray-400">No tools found for &ldquo;{query}&rdquo;.</p>
@@ -87,13 +125,13 @@ export default function HomePage() {
               },
               {
                 icon: <Shield aria-hidden="true" className="h-6 w-6 text-indigo-500" />,
-                title: 'Private & Secure',
-                desc: 'Your data never leaves your device. We never log, store, or transmit your input.',
+                title: 'Privacy-first',
+                desc: 'Tool input is processed in your browser and is not sent to a DevToolBox processing server.',
               },
               {
                 icon: <Globe aria-hidden="true" className="h-6 w-6 text-indigo-500" />,
-                title: 'Always Free',
-                desc: 'Core tools are free forever. No account required to get started.',
+                title: 'Free to use',
+                desc: 'Use the tools without an account or installation.',
               },
             ].map((f) => (
               <div key={f.title} className="flex flex-col items-center text-center gap-3 p-6 rounded-xl bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800">
@@ -105,7 +143,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      </main>
-    </>
+    </main>
   )
 }

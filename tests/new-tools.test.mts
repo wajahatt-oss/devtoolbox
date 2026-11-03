@@ -23,6 +23,7 @@ import { formatSQL } from '../src/lib/tools/sql-formatter.ts'
 import { canLoadAdSense, isValidAdSensePublisherId, isValidAdSenseSlot } from '../src/lib/adsense.ts'
 
 test('all registered tools have page-specific SEO copy and useful FAQs', () => {
+  assert.equal(tools.length, 21)
   for (const tool of tools) {
     const content = toolContent[tool.slug]
     assert.ok(content, `${tool.slug} is missing SEO content`)

@@ -1,10 +1,12 @@
 export interface Tool {
   slug: string
+  href?: string
   name: string
   description: string
   category: string
   icon: string
   popular?: boolean
+  recent?: boolean
 }
 
 export const tools: Tool[] = [
@@ -118,12 +120,70 @@ export const tools: Tool[] = [
     category: 'Text',
     icon: '↔️',
   },
+  {
+    slug: 'json-diff',
+    href: '/tools/json-diff',
+    name: 'JSON Diff Checker',
+    description: 'Compare JSON objects and arrays to find added, removed, and changed values.',
+    category: 'JSON Tools',
+    icon: '{}',
+    recent: true,
+  },
+  {
+    slug: 'cron-generator',
+    href: '/tools/cron-generator',
+    name: 'Cron Expression Generator',
+    description: 'Build five-field cron schedules, validate expressions, and preview upcoming run times.',
+    category: 'Generators',
+    icon: '⏱️',
+    recent: true,
+  },
+  {
+    slug: 'jwt-generator',
+    href: '/tools/jwt-generator',
+    name: 'JWT Generator',
+    description: 'Create HMAC-signed test JWTs locally with HS256, HS384, or HS512.',
+    category: 'Security',
+    icon: '🔐',
+    recent: true,
+  },
+  {
+    slug: 'sql-query-builder',
+    href: '/tools/sql-query-builder',
+    name: 'SQL Query Builder',
+    description: 'Build basic SELECT, INSERT, UPDATE, and DELETE statements for common SQL dialects.',
+    category: 'Developer Utilities',
+    icon: '🧱',
+    recent: true,
+  },
+  {
+    slug: 'api-tester',
+    href: '/tools/api-tester',
+    name: 'API Request Tester',
+    description: 'Send browser-based HTTP requests and inspect status, timing, headers, and response data.',
+    category: 'Developer Utilities',
+    icon: '🌐',
+    recent: true,
+  },
+  {
+    slug: 'regex-explainer',
+    href: '/tools/regex-explainer',
+    name: 'Regex Explainer',
+    description: 'Break down JavaScript regular expressions and safely test patterns against sample text.',
+    category: 'Text',
+    icon: '🔎',
+    recent: true,
+  },
 ]
 
 export const categories = [...new Set(tools.map((t) => t.category))]
 
 export function getToolBySlug(slug: string): Tool | undefined {
   return tools.find((t) => t.slug === slug)
+}
+
+export function getToolHref(tool: Pick<Tool, 'slug' | 'href'>): string {
+  return tool.href ?? `/${tool.slug}`
 }
 
 export function getToolsByCategory(category: string): Tool[] {

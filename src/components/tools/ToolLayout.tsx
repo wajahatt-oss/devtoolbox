@@ -4,6 +4,8 @@ import type { Tool } from '@/lib/tools'
 import { ToolCard } from '@/components/tools/ToolCard'
 import { toolContent } from '@/lib/tool-content'
 import { AdSenseUnit } from '@/components/ads/AdSenseUnit'
+import { siteUrl } from '@/lib/site-url'
+import { getToolHref } from '@/lib/tools'
 
 interface ToolLayoutProps {
   tool: Tool
@@ -23,6 +25,20 @@ export function ToolLayout({ tool, relatedTools, children }: ToolLayoutProps) {
         <ChevronRight aria-hidden="true" className="h-4 w-4" />
         <span className="text-gray-900 dark:text-white font-medium">{tool.name}</span>
       </nav>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+              { '@type': 'ListItem', position: 2, name: 'Tools', item: `${siteUrl}/tools` },
+              { '@type': 'ListItem', position: 3, name: tool.name, item: `${siteUrl}${getToolHref(tool)}` },
+            ],
+          }).replace(/</g, '\\u003c'),
+        }}
+      />
 
       {/* Tool header */}
       <div className="mb-8">

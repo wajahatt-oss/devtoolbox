@@ -76,7 +76,7 @@ export function UuidGeneratorClient() {
       <section className="mt-10">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">About UUID v4</h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          UUID v4 (Universally Unique Identifier version 4) values are randomly generated using your browser&apos;s cryptographically secure <code>crypto.randomUUID()</code> function. They are statistically guaranteed to be unique and suitable for use as database primary keys, file names, and more.
+          UUID v4 (Universally Unique Identifier version 4) values are randomly generated using your browser&apos;s cryptographically secure <code>crypto.randomUUID()</code> function. Collisions are extremely unlikely but not impossible, so enforce uniqueness in your database when it matters.
         </p>
       </section>
     </ToolLayout>

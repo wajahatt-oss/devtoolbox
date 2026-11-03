@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
-import { getToolBySlug } from '@/lib/tools'
+import { getToolBySlug, getToolHref } from '@/lib/tools'
 import { toolContent } from '@/lib/tool-content'
-
-const siteUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://devtoolbox.app').replace(/\/$/, '')
+import { siteUrl } from '@/lib/site-url'
 const siteName = 'DevToolBox'
 const siteDescription =
   'Free browser-based developer tools for formatting, encoding, conversion, testing, and text comparison. Your tool input stays on your device.'
@@ -42,7 +41,7 @@ export function generateToolMetadata(slug: string): Metadata {
   return generateMetadata({
     title: content.title,
     description: content.description,
-    path: `/${slug}`,
+    path: getToolHref(tool),
   })
 }
 

@@ -21,6 +21,12 @@ Free, fast, privacy-friendly online developer tools. Tool inputs are processed i
 | Timestamp Converter | `/timestamp-converter` |
 | Hash Generator | `/hash-generator` |
 | Diff Checker | `/diff-checker` |
+| JSON Diff Checker | `/tools/json-diff` |
+| Cron Expression Generator | `/tools/cron-generator` |
+| JWT Generator (test tokens only) | `/tools/jwt-generator` |
+| SQL Query Builder | `/tools/sql-query-builder` |
+| API Request Tester | `/tools/api-tester` |
+| Regex Explainer | `/tools/regex-explainer` |
 
 ## Tech Stack
 
@@ -118,6 +124,7 @@ src/
     │   └── new-tools.ts
     ├── tool-content.ts             # Per-tool SEO text and FAQs
     ├── seo.ts
+    ├── site-url.ts                 # Shared canonical site origin
     └── utils.ts
 ```
 
@@ -130,16 +137,8 @@ src/
 
 ## Privacy
 
-Tool operations run in the browser, and their input is not sent to a DevToolBox processing API. Normal website delivery still requires network requests; hosting or network providers may process standard request metadata under their own policies. See the [Privacy Policy](/privacy) and [Terms of Service](/terms).
+Tool operations run in the browser and are not sent to a DevToolBox processing API. The API Request Tester sends the URL, headers, and body you provide directly from your browser to the destination you choose; normal browser CORS and network rules apply. Normal website delivery also requires network requests; hosting or network providers may process standard request metadata under their own policies. See the [Privacy Policy](/privacy) and [Terms of Service](/terms).
 
-## Google AdSense
+## Advertising
 
-AdSense is disabled by default. The official Google script and ad units are omitted unless all of the following are true:
-
-1. `NEXT_PUBLIC_GOOGLE_ADSENSE_ID` is a valid `ca-pub-...` publisher ID.
-2. Google has approved the website and `NEXT_PUBLIC_ADSENSE_APPROVED=true` is explicitly set.
-3. The required consent handling is configured and `NEXT_PUBLIC_ADSENSE_CONSENT_READY=true` is explicitly set.
-
-After approval, assign Google ad-unit slot IDs to `NEXT_PUBLIC_ADSENSE_HOME_SLOT`, `NEXT_PUBLIC_ADSENSE_TOOLS_SLOT`, and/or `NEXT_PUBLIC_ADSENSE_TOOL_PAGE_SLOT` to enable those manual placements. Ad components render nothing when disabled or when a slot is unset. Do not enable AdSense before approval and consent compliance are in place.
-
-`public/ads.txt` intentionally contains no seller declaration yet: the seller relationship must be confirmed before adding the Google-provided record. Do not guess whether the relationship is `DIRECT` or `RESELLER`.
+Advertising is outside the current product scope and is disabled by default. The repository contains an optional AdSense integration, but its configuration flags do not provide a consent interface. Keep it disabled unless the site owner separately implements and verifies all required consent handling and obtains any required approval.

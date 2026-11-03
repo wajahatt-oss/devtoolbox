@@ -217,4 +217,88 @@ export const toolContent: Record<string, ToolContent> = {
       { question: 'Are blank lines significant?', answer: 'Yes. Line breaks and blank lines are part of the text and can appear as additions, removals, or unchanged lines in the comparison.' },
     ],
   },
+  'json-diff': {
+    title: 'JSON Diff Checker',
+    description: 'Compare two JSON documents side by side to find added, removed, and modified values in nested objects and arrays.',
+    introduction: [
+      'The JSON Diff Checker parses two JSON documents and compares their values recursively. It reports changed paths for nested objects and arrays, making it easier to review API responses, configuration changes, and test fixtures.',
+      'Comparison runs locally in your browser. The report shows the original and updated value for each change; array items are compared by index, so inserting an item can make later indexes appear changed. The tool checks JSON structure, not schema validity or application behavior.',
+    ],
+    guidance: 'Paste valid JSON in both editors and select Compare JSON. Each difference includes a path and side-by-side original and updated values. Use Reset to clear both inputs.',
+    faqs: [
+      { question: 'Are nested objects and arrays supported?', answer: 'Yes. The tool compares nested object keys recursively and array elements by their index.' },
+      { question: 'Does the comparison upload my data?', answer: 'No. Parsing and comparison happen in the browser; the documents are not sent to a DevToolBox processing server.' },
+      { question: 'How are array insertions represented?', answer: 'Arrays are compared position by position rather than by a move-aware algorithm. An insertion can therefore show as changes at several indexes.' },
+    ],
+  },
+  'cron-generator': {
+    title: 'Cron Expression Generator',
+    description: 'Build and validate standard five-field cron expressions, read a plain-language schedule, and preview upcoming run times.',
+    introduction: [
+      'Cron expressions describe recurring schedules with minute, hour, day of month, month, and day of week fields. This builder lets you edit each field, start from common examples, and validate ranges, lists, and steps before using an expression.',
+      'Next run times are calculated in the browser using your device local time zone. Cron implementations vary in syntax and daylight-saving behavior, so confirm the expression and time zone with the scheduler that will run it.',
+    ],
+    guidance: 'Edit the five fields or choose a common schedule, then select Validate schedule. Copy the expression after reviewing the explanation and next local run times.',
+    faqs: [
+      { question: 'Which cron syntax is supported?', answer: 'The builder supports five standard fields with numbers, wildcards, lists, ranges, and step values. Month and weekday names and scheduler-specific extensions are not supported.' },
+      { question: 'Which time zone are next runs shown in?', answer: 'The preview uses the time zone configured on your device. Your production scheduler may use a different time zone.' },
+      { question: 'How do day of month and weekday work together?', answer: 'When both fields are restricted, next-run calculation follows traditional cron OR behavior. Check the rules of your target scheduler.' },
+    ],
+  },
+  'jwt-generator': {
+    title: 'JWT Generator for Testing',
+    description: 'Create browser-side HMAC-signed test JWTs using HS256, HS384, or HS512 and configure common JSON claims.',
+    introduction: [
+      'This JWT generator creates compact JSON Web Tokens for local development and test fixtures. Configure a JSON header, payload, and HMAC algorithm; the browser Web Crypto API signs the token without sending its contents to a server.',
+      'Generated tokens are not production credentials, and successful signing does not verify a token policy or application security. Never enter production secrets here. The temporary test secret remains in the current page state only and is cleared when you clear the form or leave the page.',
+    ],
+    guidance: 'Select HS256, HS384, or HS512, set a matching alg value in the header, enter JSON payload claims and a disposable test secret, then generate a token. Copy it only for non-production tests.',
+    faqs: [
+      { question: 'Which algorithms can I use?', answer: 'Only HMAC SHA-256, SHA-384, and SHA-512 (HS256, HS384, HS512) are supported. Asymmetric keys and unsigned tokens are not supported.' },
+      { question: 'Is my secret uploaded?', answer: 'No. Signing uses Web Crypto in your browser. Still use only a disposable test secret and avoid shared devices.' },
+      { question: 'Does token generation verify JWT security?', answer: 'No. Signing only creates a token signature. Your application must independently enforce signature, issuer, audience, expiry, and authorization checks.' },
+    ],
+  },
+  'sql-query-builder': {
+    title: 'SQL Query Builder',
+    description: 'Generate basic SELECT, INSERT, UPDATE, and DELETE queries for PostgreSQL, MySQL, and SQL Server.',
+    introduction: [
+      'The SQL Query Builder turns table names, columns, JSON values, and a WHERE condition into a readable query preview. Choose a basic operation and dialect to generate quoted identifiers and SQL literals for common query patterns.',
+      'This tool never connects to or executes against a database. WHERE conditions are raw SQL text and are included as entered, so review the generated query and use parameterized statements in application code rather than concatenating untrusted values.',
+    ],
+    guidance: 'Choose a query type and dialect, fill in the table and relevant fields, then select Generate SQL. UPDATE and DELETE require a WHERE condition to reduce accidental full-table changes.',
+    faqs: [
+      { question: 'Does this run queries against a database?', answer: 'No. It generates text only and has no database connection.' },
+      { question: 'Are WHERE conditions parameterized?', answer: 'No. The condition field is raw SQL for preview purposes. Use parameterized queries with trusted database libraries in production.' },
+      { question: 'Which SQL dialects are supported?', answer: 'Basic identifier quoting and boolean value formatting are provided for PostgreSQL/ANSI, MySQL, and SQL Server. Review dialect-specific syntax before execution.' },
+    ],
+  },
+  'api-tester': {
+    title: 'Browser API Request Tester',
+    description: 'Send GET, POST, PUT, PATCH, and DELETE requests from your browser and inspect status, duration, headers, and response data.',
+    introduction: [
+      'The API Request Tester sends HTTP requests directly from your browser to the destination URL. Add query parameters, JSON-formatted headers, and an optional body, then inspect the status, elapsed time, response headers, and formatted JSON response.',
+      'There is no server-side request proxy, so browser CORS rules apply and some APIs will reject browser requests. Use only endpoints and credentials you are authorized to access; requests are not stored by the tool, but browser and destination network infrastructure may process request metadata.',
+    ],
+    guidance: 'Choose a method, enter an absolute HTTP or HTTPS URL, optionally add query parameters, headers, and a body, then select Send request. Responses are limited to 1 MB and requests time out after 15 seconds.',
+    faqs: [
+      { question: 'Why did a request fail with a CORS error?', answer: 'The destination server must allow cross-origin requests from your browser origin. This tool does not bypass CORS or use a server-side proxy.' },
+      { question: 'Are requests sent through DevToolBox servers?', answer: 'No. Fetch runs in your browser and connects directly to the URL you enter.' },
+      { question: 'Should I include production API credentials?', answer: 'Avoid sensitive credentials. Request details remain in page memory, but copied headers can expose credentials and remote servers or browser infrastructure may process requests.' },
+    ],
+  },
+  'regex-explainer': {
+    title: 'JavaScript Regex Explainer',
+    description: 'Break down JavaScript regular expression tokens, test strings, and highlight matches in a worker with a time limit.',
+    introduction: [
+      'The Regex Explainer describes common JavaScript pattern tokens, including character classes, escapes, groups, quantifiers, anchors, and alternatives. Test a pattern against sample text to see highlighted matches and capture groups.',
+      'Matching runs in a separate browser worker that is terminated if it exceeds its time limit, helping keep the page responsive for problematic patterns. The tool explains common syntax, not every JavaScript or Unicode regular-expression edge case; confirm behavior in your target runtime.',
+    ],
+    guidance: 'Enter a JavaScript pattern without slash delimiters, choose supported flags such as g, i, or m, enter test text, and select Test expression. Matches are highlighted and the token breakdown is shown below.',
+    faqs: [
+      { question: 'Which regular expression flavor is explained?', answer: 'The tool tests JavaScript RegExp syntax and explains common tokens. Some advanced constructs and Unicode rules are not exhaustively explained.' },
+      { question: 'Can a complex pattern freeze the page?', answer: 'Matching runs in a worker that is terminated after 500 milliseconds. Pattern and test-text lengths are also limited.' },
+      { question: 'Are my test strings uploaded?', answer: 'No. Pattern explanation and matching happen in your browser and are not sent to a DevToolBox processing server.' },
+    ],
+  },
 }

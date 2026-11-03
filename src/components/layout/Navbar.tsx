@@ -5,6 +5,13 @@ import { useState } from 'react'
 import { Menu, X, Zap } from 'lucide-react'
 import { ThemeToggle } from '@/components/layout/ThemeToggle'
 
+const navigationItems = [
+  { href: '/tools', label: 'All Tools' },
+  { href: '/json-formatter', label: 'JSON' },
+  { href: '/jwt-decoder', label: 'JWT' },
+  { href: '/uuid-generator', label: 'UUID' },
+]
+
 export function Navbar() {
   const [open, setOpen] = useState(false)
 
@@ -19,24 +26,17 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-xl">
-            <Zap className="h-6 w-6 text-indigo-500" />
+            <Zap aria-hidden="true" className="h-6 w-6 text-indigo-500" />
             <span className="text-gray-900 dark:text-white">DevToolBox</span>
           </Link>
 
           {/* Desktop nav */}
           <nav aria-label="Primary navigation" className="hidden md:flex items-center gap-6">
-            <Link href="/tools" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-              All Tools
-            </Link>
-            <Link href="/json-formatter" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-              JSON
-            </Link>
-            <Link href="/jwt-decoder" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-              JWT
-            </Link>
-            <Link href="/uuid-generator" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-              UUID
-            </Link>
+            {navigationItems.map((item) => (
+              <Link key={item.href} href={item.href} className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                {item.label}
+              </Link>
+            ))}
             <ThemeToggle />
           </nav>
 
@@ -57,23 +57,16 @@ export function Navbar() {
 
         {/* Mobile menu */}
         <nav id="mobile-navigation" aria-label="Mobile navigation" hidden={!open} className="md:hidden border-t border-gray-200 dark:border-gray-800 py-4 space-y-2">
-            {[
-              { href: '/tools', label: 'All Tools' },
-              { href: '/json-formatter', label: 'JSON Formatter' },
-              { href: '/jwt-decoder', label: 'JWT Decoder' },
-              { href: '/uuid-generator', label: 'UUID Generator' },
-              { href: '/base64-encoder-decoder', label: 'Base64' },
-              { href: '/sql-formatter', label: 'SQL Formatter' },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="block px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
-              >
-                {item.label}
-              </Link>
-            ))}
+          {navigationItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className="block px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
       </div>
     </header>

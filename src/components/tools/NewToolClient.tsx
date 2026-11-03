@@ -1,7 +1,8 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { ElementType, ReactNode } from 'react'
+import { RotateCcw } from 'lucide-react'
 import { CopyButton } from '@/components/tools/CopyButton'
 import { ToolLayout } from '@/components/tools/ToolLayout'
 import { compareText, convertTimestamp, decodeUrl, encodeUrl, formatHtml, formatXml, generateHash, jsonToCsv, minifyCss, parseMarkdown, testRegex, type DigestAlgorithm, type MarkdownInline } from '@/lib/tools/new-tools'
@@ -50,6 +51,7 @@ function MarkdownPreview({ source }: { source: string }) {
 
 export function NewToolClient({ slug }: { slug: string }) {
   const tool = getToolBySlug(slug)
+  const activeRun = useRef(0)
   const [input, setInput] = useState('')
   const [secondInput, setSecondInput] = useState('')
   const [output, setOutput] = useState('')
@@ -63,12 +65,17 @@ export function NewToolClient({ slug }: { slug: string }) {
   const related = tools.filter((item) => item.slug !== slug).slice(0, 3)
 
   function run(action: () => string | Promise<string>) {
+    const runId = ++activeRun.current
     setError('')
     setOutput('')
     Promise.resolve()
       .then(action)
-      .then(setOutput)
-      .catch((caught: unknown) => setError(caught instanceof Error ? caught.message : 'The operation failed.'))
+      .then((result) => {
+        if (runId === activeRun.current) setOutput(result)
+      })
+      .catch((caught: unknown) => {
+        if (runId === activeRun.current) setError(caught instanceof Error ? caught.message : 'The operation failed.')
+      })
   }
 
   function textArea(label: string, value: string, onChange: (value: string) => void, placeholder: string) {
@@ -118,6 +125,18 @@ export function NewToolClient({ slug }: { slug: string }) {
       default:
         throw new Error('Unsupported tool.')
     }
+  }
+
+  function reset() {
+    activeRun.current += 1
+    setInput('')
+    setSecondInput('')
+    setOutput('')
+    setError('')
+    setMode('encode')
+    setPattern('')
+    setFlags('g')
+    setAlgorithm('SHA-256')
   }
 
   const modeSwitcher = (
@@ -180,6 +199,12 @@ export function NewToolClient({ slug }: { slug: string }) {
   return (
     <ToolLayout tool={tool} relatedTools={related}>
       <section aria-label={`${tool.name} interface`} className="space-y-5">
+        <div className="flex justify-end">
+          <button type="button" onClick={reset} className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800">
+            <RotateCcw aria-hidden="true" className="h-4 w-4" />
+            Reset
+          </button>
+        </div>
         {editor}
         {(output || error) && slug !== 'markdown-previewer' && (
           <section aria-live="polite" aria-label="Tool result" className="space-y-2">

@@ -1,11 +1,10 @@
 import type { MetadataRoute } from 'next'
-import { tools } from '@/lib/tools'
-
-const siteUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://devtoolbox.app').replace(/\/$/, '')
+import { getToolHref, tools } from '@/lib/tools'
+import { siteUrl } from '@/lib/site-url'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages = tools.map((tool) => ({
-    url: `${siteUrl}/${tool.slug}`,
+    url: `${siteUrl}${getToolHref(tool)}`,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }))
